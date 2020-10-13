@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import TrafficLight from 'react-trafficlight';
-import './Home.css';
 
 export class Home extends Component {
   static displayName = Home.name;
@@ -9,30 +8,47 @@ export class Home extends Component {
     super(props);
     this.state = { seconds: 0, redOn: false, greenOn: false, yellowOn: false};
     this.startTimer = this.startTimer.bind(this);
+    this.stopTimer = this.stopTimer.bind(this);
+
   }
 
 
   startTimer() {
-    this.state.seconds = 0;
-    this.state.greenOn = true;
-    this.state.yellowOn = false;
-    this.state.redOn = false;
+    this.setState({
+      seconds: 0,
+      greenOn: false,
+      yellowOn: false,
+      redOn: false
+    });
 
     clearInterval(this.timer);
     this.timer = setInterval( () => {this.incrementSeconds() }, 1000 );
   }
 
 
+  stopTimer() {
+    clearInterval(this.timer);
+  }
+
 
   incrementSeconds() {
-    if (this.state.seconds == 3) {
+    if (this.state.seconds > 9) {
+      this.setState({
+        greenOn: true,
+        yellowOn: false,
+        redOn: false
+      });
+    }
+
+
+    if (this.state.seconds > 29) {
       this.setState({
         greenOn: false,
         yellowOn: true
       });
     }
 
-    if (this.state.seconds == 6) {
+    if (this.state.seconds > 59) {
       this.setState({
         redOn: true,
         yellowOn: false
@@ -56,7 +72,8 @@ export class Home extends Component {
           </div>
           <div className="controls">
             <div><h1>{this.state.seconds}</h1></div>
-            <button className="btn btn-primary" onClick={this.startTimer}>Start</button>
+            <button style={{paddingRight:10}} className="btn btn-success" onClick={this.startTimer}>Start</button>
+            <button className="btn btn-danger" onClick={this.stopTimer}>Stop</button>
           </div>
       </div>
     );
